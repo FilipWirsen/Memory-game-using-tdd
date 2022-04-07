@@ -2,7 +2,8 @@
  * @jest-environment jsdom
  */
 
-const { game } = require("../game");
+const { test, expect, describe} = require("@jest/globals");
+const { game, newGame, showScore } = require("../game");
 
 
 beforeAll(() => {
@@ -13,7 +14,7 @@ beforeAll(() => {
     document.close();
 });
 
-describe("game objects contains corrent keys", () => {
+describe("game objects contains correct keys", () => {
     test("score key exists", () => {
         expect("score" in game).toBe(true)
     });
@@ -28,5 +29,27 @@ describe("game objects contains corrent keys", () => {
     });
     test("choices contains the correct id's", () => {
         expect(game.choices).toEqual(["button1", "button2", "button3", "button4"]);    
+    });
+});
+
+describe("newGame works correctly", () => {
+    beforeAll(() => {
+        game.score = 42;
+        game.playerMoves.push("button1", "button2");
+        game.currentGame.push("button1", "button2");
+        document.getElementById("score").innerText = "42";
+        newGame();
+    });
+    test("should set game score to 0", () => {
+        expect(game.score).toEqual(0);
+    });
+    test("should clear the playerMoves array", () => {
+        expect(game.playerMoves.length).toEqual(0);
+    });
+    test("should clear the currentGame array", () => {
+        expect(game.currentGame.length).toEqual(0);
+    });
+    test("should display 0 for the element with id of score", () => {
+        expect(document.getElementById("score").innerText).toEqual(0);
     });
 });
